@@ -1,0 +1,97 @@
+############################
+# .NET BUILD ARTIFACTS
+############################
+bin/
+obj/
+out/
+artifacts/
+
+############################
+# USER / IDE FILES
+############################
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+############################
+# LOGS / TEMP FILES
+############################
+*.log
+logs/
+*.tmp
+*.temp
+*.bak
+*.orig
+*.cache
+
+############################
+# ASP.NET CORE
+############################
+# Secrets
+appsettings.Development.json
+appsettings.Local.json
+appsettings.*.local.json
+*.env
+*.env.*
+
+# Static build artifacts (optionally ignored)
+wwwroot/dist/
+wwwroot/node_modules/
+
+############################
+# NODE (if you use JS/TS in WebAPI)
+############################
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+############################
+# DOTNET / SECURITY
+############################
+*.pfx
+*.snk
+*.key
+
+############################
+# NUGET
+############################
+*.nupkg
+*.snupkg
+packages/
+*.nuget.props
+*.nuget.targets
+project.lock.json
+
+############################
+# OS / TOOLING
+############################
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Linux
+*~
+
+############################
+# BACKUP FILES
+############################
+*.old
+*.backup
