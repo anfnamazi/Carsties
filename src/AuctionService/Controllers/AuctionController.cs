@@ -38,4 +38,20 @@ public class AuctionController : ControllerBase
 
         return _mapper.Map<AuctionDto>(auction);
     }
+
+    [HttpPost]
+    public async Task<ActionResult<AuctionDto>> CreateAuction(CreateAuctionDto auctionDto)
+    {
+        var auction = _mapper.Map<Auction>(auctionDto);
+        // TODO: add current user as seller
+        auction.Seller = "test";
+
+        _context.Auctions.Add(auction);
+        var result = await _context.SaveChangesAsync() > 0;
+
+        if (!result) return BadRequest("Could not save changes to the db");
+
+        return CreatedAtAction(nameof(GetAllAuction),
+            new { auction.Id }, _mapper.Map<AuctionDto>(auction));
+    }
 }
