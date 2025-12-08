@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Entities;
 using SearchService.Models;
+using SearchService.RequestHelpers;
 
 namespace SearchService.Controllers
 {
@@ -9,18 +10,42 @@ namespace SearchService.Controllers
     public class SearchController : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<List<Item>>> SearchItems(string searchTerm, int pageNumber = 1, int pageSize = 4)
+        public async Task<ActionResult<List<Item>>> SearchItems([FromQuery] SearchParams searchParams)
         {
-            var query = DB.PagedSearch<Item>();
-            query.Sort(i => i.Ascending(i => i.Make));
+            var query = DB.PagedSearch<Item, Item>();
 
-            if (!string.IsNullOrEmpty(searchTerm))
+            if (!string.IsNullOrEmpty(searchParams.searchTerm))
             {
-                query.Match(Search.Full, searchTerm).SortByTextScore();
+                query.Match(Search.Full, searchParams.searchTerm).SortByTextScore();
             }
 
-            query.PageNumber(pageNumber);
-            query.PageSize(pageSize);
+            query = searchParams.OrderBy switch
+            {
+                "make" => query.Sort(i => i.Ascending(i => i.Make)),
+                "new" => query.Sort(i => i.Ascending(i => i.CreatedAt)),
+                _ => query.Sort(i => i.Ascending(i => i.AuctionEnd)),
+            };
+
+            query = searchParams.FilterBy switch
+            {
+                "finished" => query.Match(i => i.AuctionEnd > DateTime.UtcNow),
+                "endingSoon" => query.Match(i => i.AuctionEnd < DateTime.UtcNow.AddHours(6)
+                    && i.AuctionEnd < DateTime.UtcNow),
+                _ => query.Match(i => i.AuctionEnd < DateTime.UtcNow)
+            };
+
+            if (!string.IsNullOrEmpty(searchParams.Seller))
+            {
+                query.Match(i => i.Seller.Contains(searchParams.Seller));
+            }
+
+            if (!string.IsNullOrEmpty(searchParams.Winner))
+            {
+                query.Match(i => i.Winner.Contains(searchParams.Winner));
+            }
+
+            query.PageNumber(searchParams.pageNumber);
+            query.PageSize(searchParams.pageSize);
 
             var result = await query.ExecuteAsync();
             return Ok(new
