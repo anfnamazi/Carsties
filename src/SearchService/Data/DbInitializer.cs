@@ -27,7 +27,7 @@ public class DbInitializer
         var httpClient = scoped.ServiceProvider.GetRequiredService<AuctionSvcHttpClient>();
         var items = await httpClient.GetItemsForSearchDb();
 
-        Console.WriteLine(items.Count + "items fetched from auction service");
+        Console.WriteLine(items.Count + " items fetched from auction service");
 
         if (items.Count > 0) await DB.SaveAsync(items);
 
