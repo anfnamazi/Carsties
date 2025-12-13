@@ -12,7 +12,6 @@ builder.Services.AddControllers();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddHttpClient<AuctionSvcHttpClient>().AddPolicyHandler(GetPolicy());
 
-var rabbitConfig = builder.Configuration.GetSection("RabbitMq");
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumersFromNamespaceContaining<AuctionCreatedConsumer>();
@@ -21,15 +20,6 @@ builder.Services.AddMassTransit(x =>
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.ConfigureEndpoints(context);
-        cfg.Host(
-            rabbitConfig["Host"],
-            rabbitConfig["VirtualHost"],
-            h =>
-            {
-                h.Username(rabbitConfig["UserName"]);
-                h.Password(rabbitConfig["Password"]);
-            }
-        );
     });
 });
 
