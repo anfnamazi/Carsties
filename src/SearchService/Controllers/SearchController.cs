@@ -28,11 +28,10 @@ namespace SearchService.Controllers
 
             query = searchParams.FilterBy switch
             {
-                "finished" => query.Match(i => i.AuctionEnd > DateTime.UtcNow),
+                "finished" => query.Match(i => i.AuctionEnd < DateTime.UtcNow),
                 "endingSoon" => query.Match(i => i.AuctionEnd < DateTime.UtcNow.AddHours(6)
                     && i.AuctionEnd < DateTime.UtcNow),
-                // TODO: The API should return active auctions -> query.Match(i => i.AuctionEnd < DateTime.UtcNow)
-                _ => query
+                _ => query.Match(i => i.AuctionEnd > DateTime.UtcNow)
             };
 
             if (!string.IsNullOrEmpty(searchParams.Seller))
