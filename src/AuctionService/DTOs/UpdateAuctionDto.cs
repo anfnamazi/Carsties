@@ -1,6 +1,6 @@
 namespace AuctionService.DTOs;
 
-public class UpdateAuction
+public class UpdateAuctionDto
 {
     public string? Make { get; set; }
     public string? Model { get; set; }
