@@ -20,7 +20,7 @@ public class CustomProfileService : IProfileService
         var user = await _userManager.GetUserAsync(context.Subject);
         var existClaims = await _userManager.GetClaimsAsync(user);
 
-        var claims = new List<Claim> { new Claim("uesrname", user.UserName) };
+        var claims = new List<Claim> { new Claim("username", user.UserName) };
         context.IssuedClaims.AddRange(claims);
         context.IssuedClaims.Add(existClaims.FirstOrDefault(u => u.Type == JwtClaimTypes.Name));
     }
