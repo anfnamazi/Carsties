@@ -29,3 +29,22 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+
+  auction-svc:
+    build:
+      context: .
+      dockerfile: src/AuctionService/Dockerfile
+    image: trycatchlearn/auction-svc:latest
+    container_name: carsties-auction-svc
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - RabbitMq_Host=rabbitmq
+      - ConnectionStrings_DefaultConnection=Host=postgres;Port=5432;Username=postgres;Password=postgrespw;Database=Auctions
+      - IdentityServiceUrl=http://identity-svc
+    ports:
+      - "7001:80"
+    depends_on:
+      - postgres
+      - rabbitmq
