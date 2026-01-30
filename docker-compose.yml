@@ -48,3 +48,21 @@ services:
     depends_on:
       - postgres
       - rabbitmq
+  search-svc:
+    build:
+      context: .
+      dockerfile: src/SearchService/Dockerfile
+    image: trycatchlearn/search-svc:latest
+    container_name: carsties-search-svc
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - RabbitMq_Host=rabbitmq
+      - ConnectionStrings_MongoDBConnection=Host=mongodb://root:mongopw@mongodb
+      - AuctionServiceUrl=http://auction-svc
+    ports:
+      - "7002:80"
+    depends_on:
+      - mongodb
+      - rabbitmq
