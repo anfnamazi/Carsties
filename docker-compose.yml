@@ -66,3 +66,18 @@ services:
     depends_on:
       - mongodb
       - rabbitmq
+  identity-svc:
+    build:
+      context: .
+      dockerfile: src/IdentityServer/Dockerfile
+    image: trycatchlearn/identity-svc:latest
+    container_name: carsties-identity-svc
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings_DefaultConnection=Host=postgres;Port=5432;Username=postgres;Password=postgrespw;Database=identity
+    ports:
+      - "5001:80"
+    depends_on:
+      - postgres
