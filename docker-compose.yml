@@ -9,6 +9,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgrespw
       POSTGRES_DB: Auctions
+      POSTGRES_MULTIPLE_DATABASES: identity,Auctions
     ports:
       - "5432:5432"
 
@@ -40,8 +41,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - RabbitMq_Host=rabbitmq
-      - ConnectionStrings_DefaultConnection=Host=postgres;Port=5432;Username=postgres;Password=postgrespw;Database=Auctions
+      - RabbitMq__Host=rabbitmq
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Username=postgres;Password=postgrespw;Database=Auctions
       - IdentityServiceUrl=http://identity-svc
     ports:
       - "7001:80"
@@ -58,8 +59,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - RabbitMq_Host=rabbitmq
-      - ConnectionStrings_MongoDBConnection=Host=mongodb://root:mongopw@mongodb
+      - RabbitMq__Host=rabbitmq
+      - ConnectionStrings__MongoDBConnection=mongodb://root:mongopw@mongodb:27017
       - AuctionServiceUrl=http://auction-svc
     ports:
       - "7002:80"
