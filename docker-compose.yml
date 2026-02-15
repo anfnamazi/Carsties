@@ -85,7 +85,7 @@ services:
   gateway-svc:
     build:
       context: .
-      dockerfile: src/GatewayServer/Dockerfile
+      dockerfile: src/GatewayService/Dockerfile
     image: trycatchlearn/gateway-svc:latest
     container_name: carsties-gateway-svc
     restart: always
