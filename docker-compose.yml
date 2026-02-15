@@ -82,3 +82,15 @@ services:
       - "5001:80"
     depends_on:
       - postgres
+  gateway-svc:
+    build:
+      context: .
+      dockerfile: src/GatewayServer/Dockerfile
+    image: trycatchlearn/gateway-svc:latest
+    container_name: carsties-gateway-svc
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - "6001:80"
