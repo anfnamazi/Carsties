@@ -12,6 +12,11 @@ services:
       POSTGRES_MULTIPLE_DATABASES: identity,Auctions
     ports:
       - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 3
 
   mongodb:
     image: mongo:7
@@ -22,6 +27,12 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: mongopw
     ports:
       - "27017:27017"
+    healthcheck:
+      test: [ "CMD", "mongosh", "--quiet", "127.0.0.1/test", "--eval", "'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)'" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
@@ -30,6 +41,11 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "check_port_connectivity" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   auction-svc:
     build:
@@ -47,8 +63,10 @@ services:
     ports:
       - "7001:80"
     depends_on:
-      - postgres
-      - rabbitmq
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
   search-svc:
     build:
       context: .
@@ -65,8 +83,10 @@ services:
     ports:
       - "7002:80"
     depends_on:
-      - mongodb
-      - rabbitmq
+      mongodb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
   identity-svc:
     build:
       context: .
@@ -81,7 +101,8 @@ services:
     ports:
       - "5001:80"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
   gateway-svc:
     build:
       context: .
