@@ -95,7 +95,7 @@ services:
     container_name: carsties-identity-svc
     restart: always
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Username=postgres;Password=postgrespw;Database=identity
     ports:
